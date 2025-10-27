@@ -15,8 +15,6 @@ public class CONTROL {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        
-        //esto es para revertir un comit
     }
     
 }
