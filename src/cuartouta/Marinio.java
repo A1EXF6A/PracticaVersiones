@@ -6,20 +6,10 @@ package cuartouta;
 
 /**
  *
- * @author DELL
+ * @author User
  */
-public class Main {
+public class Marinio {
     public static void main(String[] args) {
-        Login log = new Login();
-        log.setVisible(true);
-        
-        //ff
-        //ggg
-        //ll
-        
-        //practica
-        ///ddd
-        ///ddddkdkd
-        //ffffff
+        //hola
     }
 }
