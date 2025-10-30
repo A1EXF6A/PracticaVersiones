@@ -119,12 +119,12 @@ ORDER BY e.est_apellido, e.est_nombre]]>
 				<reportElement x="340" y="5" width="80" height="20" uuid="12345678-1234-1234-1234-123456789039"/>
 				<textFieldExpression><![CDATA[$F{est_telefono}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isStretchWithOverflow="true">
 				<reportElement x="425" y="5" width="130" height="20" uuid="12345678-1234-1234-1234-123456789040"/>
 				<textFieldExpression><![CDATA[$F{cursos}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement positionType="FixRelativeToBottom" x="0" y="19" width="555" height="1" uuid="12345678-1234-1234-1234-123456789def"/>
+				<reportElement positionType="FixRelativeToBottom" isPrintRepeatedValues="false" x="0" y="19" width="555" height="1" uuid="12345678-1234-1234-1234-123456789def"/>
 			</line>
 		</band>
 	</detail>
