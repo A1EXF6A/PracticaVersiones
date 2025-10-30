@@ -55,7 +55,7 @@ public class Login extends javax.swing.JFrame {
             pst.close();
             cc.close();
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "ERROR INTERNO");
         }
     }
 
