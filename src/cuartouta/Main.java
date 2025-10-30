@@ -16,5 +16,6 @@ public class Main {
         //visual
         //gestion
         //estudiantes
+        //inscripciones
     }
 }
