@@ -13,5 +13,6 @@ public class Main {
         Login log = new Login();
         log.setVisible(true); 
         //proyecto
+        //visual
     }
 }
