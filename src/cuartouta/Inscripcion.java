@@ -43,14 +43,45 @@ public class Inscripcion extends javax.swing.JInternalFrame {
         loadInscripciones("");
 
         jtblDatosCursos.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                int fila = jtblDatosCursos.getSelectedRow();
-                if (fila != -1) {
-                    delete(); // activa botones y espera confirmación del usuario
-                }
+    @Override
+    public void mouseClicked(java.awt.event.MouseEvent evt) {
+        int fila = jtblDatosCursos.getSelectedRow();
+        if (fila == -1) return;
+
+        // --- Activar botones por defecto ---
+        delete();
+
+        // --- Obtener valores de la fila seleccionada ---
+        String curso = jtblDatosCursos.getValueAt(fila, 0).toString();
+        String cedula = jtblDatosCursos.getValueAt(fila, 1).toString();
+        String nombre = jtblDatosCursos.getValueAt(fila, 2).toString();
+        String apellido = jtblDatosCursos.getValueAt(fila, 3).toString();
+
+        // --- Seleccionar estudiante en el combo ---
+        for (int i = 0; i < jcbxEstudiantes.getItemCount(); i++) {
+            String item = jcbxEstudiantes.getItemAt(i);
+            if (item.startsWith(cedula + "-")) {
+                jcbxEstudiantes.setSelectedIndex(i);
+                break;
             }
-        });
+        }
+
+        // --- Seleccionar curso en el combo ---
+        for (int i = 0; i < jcbxCursos.getItemCount(); i++) {
+            String item = jcbxCursos.getItemAt(i);
+            if (item.equalsIgnoreCase(curso)) {
+                jcbxCursos.setSelectedIndex(i);
+                break;
+            }
+        }
+
+        // --- Configurar estado de combos y botones ---
+        jcbxEstudiantes.setEnabled(false); // estudiante bloqueado
+        jcbxCursos.setEnabled(true);       // solo curso editable
+        jbtnInscribir.setEnabled(false);   // no se permite inscribir nuevo
+        jbtnNuevo.setEnabled(false);
+    }
+});
 
         // búsqueda dinámica en el campo jtxtBuscarEstudiante
         jtxtBuscarEstudiante.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
@@ -242,6 +273,65 @@ public class Inscripcion extends javax.swing.JInternalFrame {
         }
     }
 
+    private void updateInscription() {
+        try {
+            int fila = jtblDatosCursos.getSelectedRow();
+            if (fila == -1) {
+                JOptionPane.showMessageDialog(this, "Seleccione una inscripción para actualizar");
+                return;
+            }
+
+            // Obtener datos de la tabla
+            String cedula = jtblDatosCursos.getValueAt(fila, 1).toString();
+            String cursoActual = jtblDatosCursos.getValueAt(fila, 0).toString();
+            String cursoNuevo = jcbxCursos.getSelectedItem().toString();
+
+            if (cursoNuevo.equals(cursoActual)) {
+                JOptionPane.showMessageDialog(this, "Seleccione un curso diferente para actualizar.");
+                return;
+            }
+
+            // Buscar ID del curso nuevo
+            Connection cc = con.conectar();
+            String sqlCurso = "SELECT cursoid FROM cursos WHERE nombre = ? LIMIT 1";
+            PreparedStatement psCurso = cc.prepareStatement(sqlCurso);
+            psCurso.setString(1, cursoNuevo);
+            ResultSet rsCurso = psCurso.executeQuery();
+            if (!rsCurso.next()) {
+                JOptionPane.showMessageDialog(this, "El curso seleccionado no existe.");
+                return;
+            }
+            int nuevoCursoId = rsCurso.getInt("cursoid");
+
+            // Ejecutar actualización
+            String sqlUpdate = """
+            UPDATE estudiante_curso 
+            SET cursoid = ? 
+            WHERE est_cedula = (
+                SELECT est_cedula FROM estudiante WHERE est_cedula = ?
+            )
+            AND cursoid = (
+                SELECT cursoid FROM cursos WHERE nombre = ?
+            )
+        """;
+            PreparedStatement psUpdate = cc.prepareStatement(sqlUpdate);
+            psUpdate.setInt(1, nuevoCursoId);
+            psUpdate.setString(2, cedula);
+            psUpdate.setString(3, cursoActual);
+
+            int n = psUpdate.executeUpdate();
+            if (n > 0) {
+                JOptionPane.showMessageDialog(this, "Inscripción actualizada correctamente");
+                loadInscripciones("");
+                start(); // restaurar botones
+            } else {
+                JOptionPane.showMessageDialog(this, "No se pudo actualizar la inscripción");
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error al actualizar: " + ex.getMessage());
+        }
+    }
+
     private void searchByCedula(String ced) {
         loadInscripciones(ced);
     }
@@ -253,6 +343,7 @@ public class Inscripcion extends javax.swing.JInternalFrame {
         jbtnCancelar.setEnabled(true);
         jcbxCursos.setEnabled(false);
         jcbxEstudiantes.setEnabled(false);
+        jbtnActualizar.setEnabled(false);
     }
 
     public void newRegistration() {
@@ -262,6 +353,7 @@ public class Inscripcion extends javax.swing.JInternalFrame {
         jbtnCancelar.setEnabled(true);
         jcbxCursos.setEnabled(true);
         jcbxEstudiantes.setEnabled(true);
+        jbtnActualizar.setEnabled(false);
 
     }
 
@@ -270,6 +362,7 @@ public class Inscripcion extends javax.swing.JInternalFrame {
         jbtnInscribir.setEnabled(false);
         jbtnEliminar.setEnabled(true);
         jbtnCancelar.setEnabled(true);
+        jbtnActualizar.setEnabled(true);
     }
 
     @SuppressWarnings("unchecked")
@@ -290,6 +383,7 @@ public class Inscripcion extends javax.swing.JInternalFrame {
         jbtnEliminar = new javax.swing.JButton();
         jbtnNuevo = new javax.swing.JButton();
         jbtnCancelar = new javax.swing.JButton();
+        jbtnActualizar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -345,6 +439,13 @@ public class Inscripcion extends javax.swing.JInternalFrame {
             }
         });
 
+        jbtnActualizar.setText("Actualizar");
+        jbtnActualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbtnActualizarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -362,26 +463,28 @@ public class Inscripcion extends javax.swing.JInternalFrame {
                             .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, 96, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, 94, Short.MAX_VALUE)
                                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jcbxEstudiantes, 0, 218, Short.MAX_VALUE)
-                                    .addComponent(jcbxCursos, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jtxtBuscarEstudiante, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(jcbxEstudiantes, 0, 218, Short.MAX_VALUE)
+                                        .addComponent(jcbxCursos, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jLabel4)
-                        .addGap(33, 33, 33)
-                        .addComponent(jtxtBuscarEstudiante, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jbtnInscribir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jbtnNuevo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jbtnEliminar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jbtnCancelar, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jbtnActualizar)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(jbtnInscribir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jbtnNuevo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jbtnEliminar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jbtnCancelar, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE)))
                 .addGap(51, 51, 51))
         );
         jPanel1Layout.setVerticalGroup(
@@ -402,14 +505,16 @@ public class Inscripcion extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jbtnEliminar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jbtnActualizar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
                 .addComponent(jbtnCancelar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(jtxtBuscarEstudiante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(26, 26, 26)
+                    .addComponent(jtxtBuscarEstudiante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(51, 51, 51))
+                .addGap(28, 28, 28))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -420,7 +525,7 @@ public class Inscripcion extends javax.swing.JInternalFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 530, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -453,6 +558,10 @@ public class Inscripcion extends javax.swing.JInternalFrame {
         deleteInscripcion();
     }//GEN-LAST:event_jbtnEliminarActionPerformed
 
+    private void jbtnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnActualizarActionPerformed
+        updateInscription();
+    }//GEN-LAST:event_jbtnActualizarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
@@ -461,6 +570,7 @@ public class Inscripcion extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton jbtnActualizar;
     private javax.swing.JButton jbtnCancelar;
     private javax.swing.JButton jbtnEliminar;
     private javax.swing.JButton jbtnInscribir;

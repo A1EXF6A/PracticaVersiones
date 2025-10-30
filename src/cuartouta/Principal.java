@@ -7,7 +7,7 @@ package cuartouta;
 //import reportes.ReporteEstudiantes;
 //import reportes.VisorPDF;
 import java.awt.Color;
-import java.sql.Connection;
+import java.sql.*;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import java.awt.event.KeyEvent;
@@ -25,7 +25,7 @@ import net.sf.jasperreports.view.JasperViewer;
  * @author DELL
  */
 public class Principal extends javax.swing.JFrame {
-
+    private Conexion con = new Conexion();
     private String rol;
     // instancia actual para acceder al JDesktopPane desde clases estáticas (VisorPDF)
     private static Principal currentInstance;

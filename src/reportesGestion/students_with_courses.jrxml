@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
- <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="students_with_courses" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="30" bottomMargin="30" uuid="12345678-1234-1234-1234-123456789027">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="students_with_courses" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="30" bottomMargin="30" uuid="12345678-1234-1234-1234-123456789027">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<queryString language="SQL">
-		<![CDATA[SELECT e.est_cedula, e.est_nombre, e.est_apellido, e.est_direccion, e.est_telefono, GROUP_CONCAT(c.nombre SEPARATOR ', ') as cursos
+	<queryString>
+		<![CDATA[SELECT e.est_cedula, e.est_nombre, e.est_apellido, e.est_direccion, e.est_telefono, COALESCE(GROUP_CONCAT(c.nombre SEPARATOR ', '), 'S/C') AS cursos
 FROM estudiante e
 LEFT JOIN estudiante_curso ec ON e.est_cedula = ec.est_cedula
 LEFT JOIN cursos c ON ec.cursoid = c.cursoid
@@ -26,9 +26,7 @@ ORDER BY e.est_apellido, e.est_nombre]]>
 	<field name="est_telefono" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="cursos" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
+	<field name="cursos" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -56,54 +54,42 @@ ORDER BY e.est_apellido, e.est_nombre]]>
 	<columnHeader>
 		<band height="27" splitType="Stretch">
 			<staticText>
-				<reportElement mode="Opaque" x="0" y="2" width="80" height="20" forecolor="#FFFFFF" backcolor="#001F3F" uuid="12345678-1234-1234-1234-123456789029">
-
-				</reportElement>
+				<reportElement mode="Opaque" x="0" y="2" width="80" height="20" forecolor="#FFFFFF" backcolor="#001F3F" uuid="12345678-1234-1234-1234-123456789029"/>
 				<textElement textAlignment="Center">
 					<font size="14" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Cedula]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="85" y="2" width="80" height="20" forecolor="#FFFFFF" backcolor="#001F3F" uuid="12345678-1234-1234-1234-123456789030">
-
-				</reportElement>
+				<reportElement mode="Opaque" x="85" y="2" width="80" height="20" forecolor="#FFFFFF" backcolor="#001F3F" uuid="12345678-1234-1234-1234-123456789030"/>
 				<textElement textAlignment="Center">
 					<font size="14" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Nombre]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="170" y="2" width="80" height="20" forecolor="#FFFFFF" backcolor="#001F3F" uuid="12345678-1234-1234-1234-123456789031">
-
-				</reportElement>
+				<reportElement mode="Opaque" x="170" y="2" width="80" height="20" forecolor="#FFFFFF" backcolor="#001F3F" uuid="12345678-1234-1234-1234-123456789031"/>
 				<textElement textAlignment="Center">
 					<font size="14" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Apellido]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="255" y="2" width="80" height="20" forecolor="#FFFFFF" backcolor="#001F3F" uuid="12345678-1234-1234-1234-123456789032">
-
-				</reportElement>
+				<reportElement mode="Opaque" x="255" y="2" width="80" height="20" forecolor="#FFFFFF" backcolor="#001F3F" uuid="12345678-1234-1234-1234-123456789032"/>
 				<textElement textAlignment="Center">
 					<font size="14" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Direccion]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="340" y="2" width="80" height="20" forecolor="#FFFFFF" backcolor="#001F3F" uuid="12345678-1234-1234-1234-123456789033">
-
-				</reportElement>
+				<reportElement mode="Opaque" x="340" y="2" width="80" height="20" forecolor="#FFFFFF" backcolor="#001F3F" uuid="12345678-1234-1234-1234-123456789033"/>
 				<textElement textAlignment="Center">
 					<font size="14" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Telefono]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="425" y="2" width="130" height="20" forecolor="#FFFFFF" backcolor="#001F3F" uuid="12345678-1234-1234-1234-123456789034">
-
-				</reportElement>
+				<reportElement mode="Opaque" x="425" y="2" width="130" height="20" forecolor="#FFFFFF" backcolor="#001F3F" uuid="12345678-1234-1234-1234-123456789034"/>
 				<textElement textAlignment="Center">
 					<font size="14" isBold="true"/>
 				</textElement>
@@ -114,39 +100,27 @@ ORDER BY e.est_apellido, e.est_nombre]]>
 	<detail>
 		<band height="25" splitType="Stretch">
 			<textField>
-				<reportElement x="0" y="5" width="80" height="20" uuid="12345678-1234-1234-1234-123456789035">
-
-				</reportElement>
+				<reportElement x="0" y="5" width="80" height="20" uuid="12345678-1234-1234-1234-123456789035"/>
 				<textFieldExpression><![CDATA[$F{est_cedula}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="85" y="5" width="80" height="20" uuid="12345678-1234-1234-1234-123456789036">
-
-				</reportElement>
+				<reportElement x="85" y="5" width="80" height="20" uuid="12345678-1234-1234-1234-123456789036"/>
 				<textFieldExpression><![CDATA[$F{est_nombre}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="170" y="5" width="80" height="20" uuid="12345678-1234-1234-1234-123456789037">
-
-				</reportElement>
+				<reportElement x="170" y="5" width="80" height="20" uuid="12345678-1234-1234-1234-123456789037"/>
 				<textFieldExpression><![CDATA[$F{est_apellido}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="255" y="5" width="80" height="20" uuid="12345678-1234-1234-1234-123456789038">
-
-				</reportElement>
+				<reportElement x="255" y="5" width="80" height="20" uuid="12345678-1234-1234-1234-123456789038"/>
 				<textFieldExpression><![CDATA[$F{est_direccion}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="340" y="5" width="80" height="20" uuid="12345678-1234-1234-1234-123456789039">
-
-				</reportElement>
+				<reportElement x="340" y="5" width="80" height="20" uuid="12345678-1234-1234-1234-123456789039"/>
 				<textFieldExpression><![CDATA[$F{est_telefono}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="425" y="5" width="130" height="20" uuid="12345678-1234-1234-1234-123456789040">
-
-				</reportElement>
+				<reportElement x="425" y="5" width="130" height="20" uuid="12345678-1234-1234-1234-123456789040"/>
 				<textFieldExpression><![CDATA[$F{cursos}]]></textFieldExpression>
 			</textField>
 			<line>

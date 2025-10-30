@@ -20,6 +20,7 @@ public class Cursos extends javax.swing.JInternalFrame {
      */
     public Cursos() {
         initComponents();
+        messageError();
         //Color color = Color.decode("#FFFFFF");
         //jPanel1.setBackground(color);
         // permitir cerrar la ventana interna con el botón X
@@ -157,6 +158,12 @@ public class Cursos extends javax.swing.JInternalFrame {
                 }
             }
         });
+    }
+    
+    public void messageError(){
+        if(con==null){
+            System.out.println("");
+        }
     }
 
     @SuppressWarnings("unchecked")

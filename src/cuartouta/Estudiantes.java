@@ -37,7 +37,7 @@ public class Estudiantes extends javax.swing.JInternalFrame {
         jPanel1.setBackground(color);
         jPanel3.setBackground(color);
         jPanel2.setBackground(color);*/
-
+        messageError();
         String titles[] = {"CEDULA", "NOMBRE"};
         table = new DefaultTableModel();
         this.jtblDatos.setModel(table);
@@ -184,7 +184,7 @@ public class Estudiantes extends javax.swing.JInternalFrame {
             }
 
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "ERROR INTERNO DEL SERVIDOR");
         }
         // clean();
     }
@@ -241,7 +241,7 @@ public class Estudiantes extends javax.swing.JInternalFrame {
 
             }
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "ERROR INTERNO DEL SERVIDOR");
 
         }
     }
@@ -261,7 +261,7 @@ public class Estudiantes extends javax.swing.JInternalFrame {
                 }
             }
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "ERROR INTERNO DEL SERVIDOR");
         }
     }
 
@@ -286,7 +286,7 @@ public class Estudiantes extends javax.swing.JInternalFrame {
                 btnCancelar();
             }
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "ERROR INTERNO DEL SERVIDOR");
         }
     }
 
@@ -399,6 +399,11 @@ public class Estudiantes extends javax.swing.JInternalFrame {
         return validate;
     }
 
+    public void messageError(){
+        if(con==null){
+            System.out.println("");
+        }
+    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
