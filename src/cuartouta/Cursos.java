@@ -295,7 +295,7 @@ public class Cursos extends javax.swing.JInternalFrame {
  char a = evt.getKeyChar();
         if (!Character.isAlphabetic(a)) {
             evt.consume();
-        }        // TODO add your handling code here:
+        }  
     }//GEN-LAST:event_jtxtNombreCursoKeyTyped
 
     // agregar handlers para editar y eliminar si deseas (NetBeans GUI builder puede haber botones adicionales)

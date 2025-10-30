@@ -606,6 +606,12 @@ public class Estudiantes extends javax.swing.JInternalFrame {
 
         jLabel6.setText("Buscar");
 
+        jtxtBuscarEstudiante.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jtxtBuscarEstudianteKeyTyped(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -699,6 +705,12 @@ public class Estudiantes extends javax.swing.JInternalFrame {
     private void jtxtGeneroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtxtGeneroActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jtxtGeneroActionPerformed
+
+    private void jtxtBuscarEstudianteKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtxtBuscarEstudianteKeyTyped
+        if(!Character.isDigit(evt.getKeyChar())){
+            evt.consume();
+        }
+    }//GEN-LAST:event_jtxtBuscarEstudianteKeyTyped
 
     /**
      * @param args the command line arguments

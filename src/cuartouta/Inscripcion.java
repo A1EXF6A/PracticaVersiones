@@ -410,6 +410,11 @@ public class Inscripcion extends javax.swing.JInternalFrame {
                 jtxtBuscarEstudianteActionPerformed(evt);
             }
         });
+        jtxtBuscarEstudiante.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jtxtBuscarEstudianteKeyTyped(evt);
+            }
+        });
 
         jbtnInscribir.setText("Inscribir");
         jbtnInscribir.addActionListener(new java.awt.event.ActionListener() {
@@ -561,6 +566,12 @@ public class Inscripcion extends javax.swing.JInternalFrame {
     private void jbtnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnActualizarActionPerformed
         updateInscription();
     }//GEN-LAST:event_jbtnActualizarActionPerformed
+
+    private void jtxtBuscarEstudianteKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtxtBuscarEstudianteKeyTyped
+        if(!Character.isDigit(evt.getKeyChar())){
+            evt.consume();
+        }
+    }//GEN-LAST:event_jtxtBuscarEstudianteKeyTyped
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
