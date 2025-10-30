@@ -12,14 +12,5 @@ public class Main {
     public static void main(String[] args) {
         Login log = new Login();
         log.setVisible(true);
-        
-        //Practica
-        
-        //ff
-
-        //rr
-        //yo
-        
-        //hh
     }
 }
