@@ -14,6 +14,4 @@ public class Practica {
         System.out.println("Holi XD ddd");
         System.out.println("aaaaa");
     }
-    
-    
 }
