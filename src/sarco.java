@@ -5,15 +5,10 @@
 
 /**
  *
- * @author User
+ * @author Admin
  */
-public class Practica {
+public class sarco {
     public static void main(String[] args) {
-        System.out.println("HOLAAAAAAAAAAAAAAAAAAAA XD :3");
-        System.out.println("UwU");
-        System.out.println("Holi XD ddd");
-        System.out.println("aaaaa");
+        System.out.println("git");
     }
-    
-    
 }
