@@ -10,5 +10,6 @@
 public class Practica {
     public static void main(String[] args) {
         System.out.println("HOLAAAAAAAAAAAAAAAAAAAA XD :3");
+        System.out.println("UwU");
     }
 }
