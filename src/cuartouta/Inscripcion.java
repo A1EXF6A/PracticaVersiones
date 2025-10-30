@@ -570,6 +570,7 @@ public class Inscripcion extends javax.swing.JInternalFrame {
     private void jtxtBuscarEstudianteKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtxtBuscarEstudianteKeyTyped
         if(!Character.isDigit(evt.getKeyChar())){
             evt.consume();
+            //solo cedula
         }
     }//GEN-LAST:event_jtxtBuscarEstudianteKeyTyped
 
