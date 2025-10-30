@@ -9,5 +9,7 @@ package cuartouta;
  * @author User
  */
 public class Marinio {
-    
+    public static void main(String[] args) {
+        
+    }
 }
