@@ -13,7 +13,6 @@ public class sarco {
         System.out.println("alex reyess");
         
         System.out.println("holaaaa");
-        System.out.println("hola2");
     }
    
 }
