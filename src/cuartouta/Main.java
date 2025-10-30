@@ -11,10 +11,6 @@ package cuartouta;
 public class Main {
     public static void main(String[] args) {
         Login log = new Login();
-        log.setVisible(true);
-        
-        //dd
-        //p ff dd
-        //hola dd
+        log.setVisible(true);  
     }
 }
