@@ -14,5 +14,6 @@ public class Main {
         log.setVisible(true); 
         //proyecto
         //visual
+        //gestion
     }
 }
