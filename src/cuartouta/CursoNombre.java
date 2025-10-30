@@ -34,6 +34,11 @@ public class CursoNombre extends javax.swing.JInternalFrame {
         initComponents();
         this.setClosable(true);
         this.route = route;
+        if (route.contains("students_by_course")) {
+            this.setTitle("Estudiantes por curso");
+        } else if (route.contains("course_students_chart")) {
+            this.setTitle("Distribución por género");
+        }
         /*Color color = Color.decode("#FFFFFF");
         jPanel1.setBackground(color);*/
     }

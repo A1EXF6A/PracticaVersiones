@@ -20,6 +20,7 @@ public class Cursos extends javax.swing.JInternalFrame {
      */
     public Cursos() {
         initComponents();
+        this.setTitle("Cursos");
         messageError();
         //Color color = Color.decode("#FFFFFF");
         //jPanel1.setBackground(color);

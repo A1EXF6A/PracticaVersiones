@@ -31,6 +31,7 @@ public class Estudiantes extends javax.swing.JInternalFrame {
 
     public Estudiantes() {
         initComponents();
+        this.setTitle("Estudiantes");
         // permitir cerrar la ventana interna con el botón X
         this.setClosable(true);
         /*Color color = Color.decode("#FFFFFF");
@@ -99,25 +100,64 @@ public class Estudiantes extends javax.swing.JInternalFrame {
             @Override
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 char c = evt.getKeyChar();
-                // Solo permite letras, espacios y la tecla de retroceso
-                if ((!Character.isLetter(c) && c != ' ' && c != '\b')
-                        || jtxtNombre.getText().length() >= 50) {
-                    evt.consume(); // Bloquea si no cumple las condiciones
+                String text = jtxtNombre.getText();
+                // Permitir borrar
+                if (c == '\b') {
+                    return;
+                }
+                // Solo permite letras y un espacio
+                if (!Character.isLetter(c) && c != ' ') {
+                    evt.consume();
+                    return;
+                }
+                // No permitir espacio al inicio
+                if (c == ' ' && text.length() == 0) {
+                    evt.consume();
+                    return;
+                }
+                // No permitir más de 1 espacio
+                if (c == ' ' && text.contains(" ")) {
+                    evt.consume();
+                    return;
+                }
+                // Limitar a máximo 30 caracteres (opcional)
+                if (text.length() >= 30) {
+                    evt.consume();
                 }
             }
         });
+
         jtxtApellido.addKeyListener(new java.awt.event.KeyAdapter() {
             @Override
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 char c = evt.getKeyChar();
-
-                // Solo permite letras, espacios y la tecla de retroceso
-                if ((!Character.isLetter(c) && c != ' ' && c != '\b')
-                        || jtxtApellido.getText().length() >= 50) {
-                    evt.consume(); // Bloquea si no cumple las condiciones
+                String text = jtxtApellido.getText();
+                // Permitir borrar
+                if (c == '\b') {
+                    return;
+                }
+                // Solo letras y un espacio
+                if (!Character.isLetter(c) && c != ' ') {
+                    evt.consume();
+                    return;
+                }
+                // No permitir espacio al inicio
+                if (c == ' ' && text.length() == 0) {
+                    evt.consume();
+                    return;
+                }
+                // No permitir más de 1 espacio
+                if (c == ' ' && text.contains(" ")) {
+                    evt.consume();
+                    return;
+                }
+                // Limitar a máximo 30 caracteres (opcional)
+                if (text.length() >= 30) {
+                    evt.consume();
                 }
             }
         });
+
         jtxtDireccion.addKeyListener(new java.awt.event.KeyAdapter() {
             @Override
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -143,7 +183,6 @@ public class Estudiantes extends javax.swing.JInternalFrame {
                 }
             }
         });
-
 
     }
 
@@ -356,8 +395,6 @@ public class Estudiantes extends javax.swing.JInternalFrame {
         jtxtGenero.setEnabled(true);
     }
 
-    
-
     public boolean validateData() {
         boolean validate = true;
         StringBuilder message = new StringBuilder("Datos incorrectos:\n");
@@ -399,11 +436,12 @@ public class Estudiantes extends javax.swing.JInternalFrame {
         return validate;
     }
 
-    public void messageError(){
-        if(con==null){
+    public void messageError() {
+        if (con == null) {
             System.out.println("");
         }
     }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -697,7 +735,7 @@ public class Estudiantes extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jbtnCancelarActionPerformed
 
     private void jtxtGeneroKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtxtGeneroKeyTyped
-        if(!Character.isAlphabetic(evt.getKeyChar())){
+        if (!Character.isAlphabetic(evt.getKeyChar())) {
             evt.consume();
         }
     }//GEN-LAST:event_jtxtGeneroKeyTyped
@@ -707,7 +745,7 @@ public class Estudiantes extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jtxtGeneroActionPerformed
 
     private void jtxtBuscarEstudianteKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtxtBuscarEstudianteKeyTyped
-        if(!Character.isDigit(evt.getKeyChar())){
+        if (!Character.isDigit(evt.getKeyChar())) {
             evt.consume();
         }
     }//GEN-LAST:event_jtxtBuscarEstudianteKeyTyped

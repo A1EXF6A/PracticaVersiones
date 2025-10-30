@@ -25,6 +25,7 @@ import net.sf.jasperreports.view.JasperViewer;
  * @author DELL
  */
 public class Principal extends javax.swing.JFrame {
+
     private Conexion con = new Conexion();
     private String rol;
     // instancia actual para acceder al JDesktopPane desde clases estáticas (VisorPDF)
@@ -170,7 +171,30 @@ public class Principal extends javax.swing.JFrame {
      */
     public static void openInternalFrame(javax.swing.JInternalFrame frame) {
         if (currentInstance != null) {
+            // Limite por clase del frame
+            int maxPorTipo = 1;
+            int contador = 0;
+
+            Class<?> tipo = frame.getClass(); // tipo del internal frame a abrir
+
+            for (javax.swing.JInternalFrame f : currentInstance.jdskPrincipal.getAllFrames()) {
+                if (f.getClass() == tipo) {
+                    contador++;
+                }
+            }
+
+            if (contador >= maxPorTipo) {
+                JOptionPane.showMessageDialog(
+                        currentInstance,
+                        "Solo se permiten " + maxPorTipo + " ventanas del tipo: " + frame.getTitle(),
+                        "Límite alcanzado",
+                        JOptionPane.WARNING_MESSAGE
+                );
+                return; // ❌ No abrir más
+            }
+
             currentInstance.addInternalFrameNoOverlap(frame);
+
         } else {
             frame.setLocation(50, 50);
             frame.setVisible(true);
@@ -310,7 +334,7 @@ public class Principal extends javax.swing.JFrame {
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         if (isAdmin()) {
             Estudiantes a = new Estudiantes();
-            addInternalFrameNoOverlap(a);
+            Principal.openInternalFrame(a);
         } else {
             JOptionPane.showMessageDialog(this, "No tiene permisos");
         }
@@ -328,7 +352,7 @@ public class Principal extends javax.swing.JFrame {
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
         if (isAdmin()) {
             Inscripcion b = new Inscripcion();
-            addInternalFrameNoOverlap(b);
+            Principal.openInternalFrame(b);
         } else {
             JOptionPane.showMessageDialog(this, "No tiene permisos");
         }
@@ -337,7 +361,7 @@ public class Principal extends javax.swing.JFrame {
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
         if (isAdmin()) {
             Cursos c = new Cursos();
-            addInternalFrameNoOverlap(c);
+            Principal.openInternalFrame(c);
         } else {
             JOptionPane.showMessageDialog(this, "No tiene permisos");
         }
@@ -346,7 +370,7 @@ public class Principal extends javax.swing.JFrame {
     private void jmniEstudiantesCursoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmniEstudiantesCursoActionPerformed
         try {
             CursoNombre a = new CursoNombre("src\\reportesGestion\\students_by_course.jrxml");
-            addInternalFrameNoOverlap(a);
+            Principal.openInternalFrame(a);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "ERROR INTERNO DEL SERVIDOR");
         }
@@ -393,7 +417,7 @@ public class Principal extends javax.swing.JFrame {
     private void jmniDistribucionGeneroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmniDistribucionGeneroActionPerformed
         try {
             CursoNombre a = new CursoNombre("src\\reportesGestion\\course_students_chart.jrxml");
-            addInternalFrameNoOverlap(a);
+            Principal.openInternalFrame(a);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "ERROR INTERNO DEL SERVIDOR");
         }
